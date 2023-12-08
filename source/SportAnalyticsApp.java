@@ -227,7 +227,7 @@ public class SportAnalyticsApp  {
         // Сохранение графика
         try {
             ChartUtils.saveChartAsPNG(
-                    new File("D:\\JDK projects\\MyJavaProject-Sport\\chart.png"),
+                    new File("chart.png"),
                     chart,
                     1920,
                     1080
