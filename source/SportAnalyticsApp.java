@@ -29,7 +29,7 @@ public class SportAnalyticsApp  {
     public static void main(String[] args) {
         try {
             // Импорт данных из CSV и вставка в базу данных
-            importDataFromCSV("..\\Показатели спортивных команд.csv");
+            importDataFromCSV("Показатели спортивных команд.csv");
 
             // Вывод всех данных
             displayDatabaseData();
