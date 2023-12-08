@@ -6,26 +6,25 @@
 * SportsTeam - Представляет команду, включающую в себя список игроков и другие характеристики команды
 * PlayerMetrics - Описывает показатели игрока, такие как имя, позиция, рост, вес и возраст.
 ![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/7fc88c25-fcef-4dd6-91c0-2e91f93fffdf)
-
+![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/659811b0-0421-42b1-80b1-232127ac337c)
 <br /><br /><br />
 
-### 2. Создаём класс TeamCSVReader, который будет служить для обработки данных в формате CSV (Comma-Separated Values), который часто используется для представления табличных данных. В этом приложении, класс CSVHandler выполняет роль чтения данных из CSV файла и преобразования их в формат, который можно использовать в приложении для дальнейшей обработки.
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/f6ae4d09-47b2-4f7b-9124-4353960f6593)
-
+### 2. Создаём класс TeamCSVReader, который будет служить для обработки данных в формате CSV (Comma-Separated Values), который часто используется для представления табличных данных. В этом приложении, класс TeamCSVReader выполняет роль чтения данных из CSV файла и преобразования их в формат, который можно использовать в приложении для дальнейшей обработки.
+![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/9720c95e-0fc3-4af9-9117-72822c96e5d4)
 <br /><br /><br />
 
 ### 3. Создаём класс DatabaseHandler, который будет выполнять роль взаимодействия с базой данных SQLite и предоставляет методы для выполнения различных операций с данными. Он используется для создания, чтения, обновления и удаления данных в базе данных, а также для выполнения запросов и получения статистических данных для анализа спортивных данных.
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/658e5f46-ed82-479d-b1c3-b689b3a1975c)
+![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/555c5da1-1678-409b-a98a-381f4c6c6cc7)
 
 <br /><br /><br />
 
 ### 4. Читаем данные ( столбцы ), и создаём их в таблице базы данных SQLite, после чего передаём туда данных из csv-файла.
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/995b206f-7ea5-4348-b2d2-e5aac9b5daed)
+![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/117cc093-f9d0-4cb0-87b9-d74461a33b04)
 
 <br /><br /><br />
 
 ### 5. Создаём метод getAllData в классе DatabaseHandler, который перебирает всю БД и возвращает все данные из неё и в последствии выводим эти данные на экран пользователя в консоли.
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/3a661183-0508-43ba-ab71-d1b89e3b4f77)
+![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/4c7a5bfa-a058-47b7-a7dd-b16ef7c0eefc)
 * Вывод данных в консоль:<br />
 ![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/63503bb4-fbfe-43e7-8fcc-e61801da2dcd)
 
@@ -34,12 +33,12 @@
 ### 6. Создаём метод который выполняет первое задание, а именно строит график среднего возраста команд.
 
 * Достаём данные из базы данных:
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/246e220b-8cda-4bc1-a1f4-4ce3cef550f0)
+![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/5d0d5def-7e6d-4e6a-8b27-92d970a35069)
 
 
 * Создаём график: <br />
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/e019413f-552b-4ce7-9f1b-831621e155d9)
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/12b750a5-8c2e-412d-b3d9-b1c1413e5a11)
+![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/92cf2f1d-5640-45f9-9be3-7cc883ddabd4)
+![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/c23ac017-cc9b-452e-9658-f92e5ab079b6)
 <br /><br /><br />
 
 
@@ -52,15 +51,19 @@
 ### 8. Создаём метод для второго задания, а именно: "Найдите команду с самым высоким средним ростом. Выведите в консоль 5 самых высоких игроков команды."
 
 * Делаем нужные запросы из БД:
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/13761ed7-8de5-489e-82ee-97abe97b494a)
+![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/90e1e0e6-83eb-4b29-8538-6913a470f752)
 
-* Создаём метод для вывода в консоль:
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/2f4beb84-40bf-4ac5-95ac-d81506b33a70)
+* Создаём методы для обработки и вывода в консоль:
+![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/00d4dcc3-c568-4f8c-be91-84013c3db8fa)
 
 <br /><br /><br />
 
 ### 9. Создаём метод для третьего задания, а именно "Найдите команду, с средним ростом равным от 74 до 78 inches и средним весом от 190 до 210 lbs, с самым высоким средним возрастом."
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/7ec5e5f2-7450-4030-9298-460713057df9)
+* Делаем нужные запросы из БД:
+![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/a04cc553-e721-46a7-be76-893d905aedf5)
+
+* Создаём методы для обработки и вывода в консоль:
+![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/8932fde9-f8df-41e9-9f37-6b5a4f4758b6)
 
 <br /><br /><br />
 
