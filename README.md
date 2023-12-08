@@ -36,6 +36,7 @@
 * Достаём данные из базы данных:
 ![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/246e220b-8cda-4bc1-a1f4-4ce3cef550f0)
 
+
 * Создаём график:
 ![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/e019413f-552b-4ce7-9f1b-831621e155d9)
 ![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/12b750a5-8c2e-412d-b3d9-b1c1413e5a11)
