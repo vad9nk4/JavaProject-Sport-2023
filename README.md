@@ -1,4 +1,4 @@
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/d7aa7150-6cb6-4aa1-b066-653b0886dc44)# JavaProject-Sport-2023
+# JavaProject-Sport-2023
 
 1. Создадим два файла для хранения данных извлечённых из csv - PlayerIndicators и Team
 
