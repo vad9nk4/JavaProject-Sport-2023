@@ -41,8 +41,8 @@
 ![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/e019413f-552b-4ce7-9f1b-831621e155d9)
 <br />
 ![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/12b750a5-8c2e-412d-b3d9-b1c1413e5a11)
+<br /><br /><br />
 
-<br /><br />
 
 ### 7. Полученный график:
 ![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/8df31994-74b4-415f-bf10-756c9ae85213)
