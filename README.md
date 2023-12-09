@@ -137,7 +137,62 @@ public class PlayerMetrics  {
 <br /><br /><br />
 
 ### 2. Создаём класс TeamCSVReader, который будет служить для обработки данных в формате CSV (Comma-Separated Values), который часто используется для представления табличных данных. В этом приложении, класс TeamCSVReader выполняет роль чтения данных из CSV файла и преобразования их в формат, который можно использовать в приложении для дальнейшей обработки.
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/9720c95e-0fc3-4af9-9117-72822c96e5d4)
+```
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Класс для обработки CSV файлов и создания коллекции команд.
+ */
+public class TeamCSVReader  {
+
+    /**
+     * Метод для чтения CSV файла и создания коллекции команд.
+     *
+     * @param path Путь к CSV файлу.
+     * @return Коллекция команд.
+     */
+    public static Map<String, SportsTeam> readFile(String path) {
+        Map<String, SportsTeam> teams = new HashMap<>();
+
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(path));
+            lines = lines.subList(1, lines.size()); // Пропускаем первую строку с заголовками
+
+            for (String line : lines) {
+                String[] data = serializeLine(line);
+                String teamName = data[1];
+                SportsTeam team = teams.computeIfAbsent(teamName, SportsTeam::new);
+                team.addPlayer(new PlayerMetrics(data[0], data[2], Integer.parseInt(data[3]), Integer.parseInt(data[4]), Double.parseDouble(data[5])));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return teams;
+    }
+
+    /**
+     * Метод для обработки строки CSV и разделения на поля.
+     *
+     * @param line Строка CSV.
+     * @return Массив строк с данными.
+     */
+    private static String[] serializeLine(String line) {
+        String[] splited = line.split(",");
+
+        for (int i = 0; i < splited.length; i++) {
+            splited[i] = splited[i].replaceAll("^\"|\"$", "");
+        }
+
+        return splited;
+    }
+}
+```
 <br /><br /><br />
 
 ### 3. Создаём класс DatabaseHandler, который будет выполнять роль взаимодействия с базой данных SQLite и предоставляет методы для выполнения различных операций с данными. Он используется для создания, чтения, обновления и удаления данных в базе данных, а также для выполнения запросов и получения статистических данных для анализа спортивных данных.
