@@ -196,17 +196,113 @@ public class TeamCSVReader  {
 <br /><br /><br />
 
 ### 3. Создаём класс DatabaseHandler, который будет выполнять роль взаимодействия с базой данных SQLite и предоставляет методы для выполнения различных операций с данными. Он используется для создания, чтения, обновления и удаления данных в базе данных, а также для выполнения запросов и получения статистических данных для анализа спортивных данных.
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/555c5da1-1678-409b-a98a-381f4c6c6cc7)
 
+```
+import org.sqlite.SQLiteConfig;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Класс для работы с базой данных SQLite.
+ */
+public class DatabaseHandler {
+
+    private final Connection connection;
+
+    /**
+     * Конструктор класса.
+     *
+     * @throws SQLException            Исключение, связанное с работой с базой данных.
+     * @throws ClassNotFoundException Исключение, если не удается найти класс JDBC драйвера.
+     */
+    public DatabaseHandler() throws SQLException, ClassNotFoundException {
+        // Указываем драйвер JDBC для SQLite
+        Class.forName("org.sqlite.JDBC");
+
+        SQLiteConfig config = new SQLiteConfig();
+        config.enforceForeignKeys(true);
+
+        // Устанавливаем соединение с базой данных
+        connection = DriverManager.getConnection("jdbc:sqlite:D:\\JDK projects\\MyJavaProject-Sport\\DataBase.db", config.toProperties());
+
+        // Проверка и создание таблиц
+        createTables();
+    }
+```
 <br /><br /><br />
 
 ### 4. Читаем данные ( столбцы ), и создаём их в таблице базы данных SQLite, после чего передаём туда данных из csv-файла.
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/117cc093-f9d0-4cb0-87b9-d74461a33b04)
 
+```
+    /**
+     * Метод для создания таблиц в базе данных, если они не существуют.
+     *
+     * @throws SQLException Исключение, связанное с работой с базой данных.
+     */
+    private void createTables() {
+        try {
+            connection.createStatement().execute(
+                    "CREATE TABLE IF NOT EXISTS SportsTeam" +
+                            "(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL UNIQUE);");
+
+            connection.createStatement().execute(
+                    "CREATE TABLE IF NOT EXISTS PlayerMetrics ("
+                            + "playerId INTEGER PRIMARY KEY AUTOINCREMENT,"
+                            + "name TEXT NOT NULL,"
+                            + "position TEXT NOT NULL,"
+                            + "height INTEGER NOT NULL,"
+                            + "weight INTEGER NOT NULL,"
+                            + "age REAL NOT NULL,"
+                            + "teamId INTEGER,"
+                            + "FOREIGN KEY (teamId) REFERENCES teams(id));");
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log or handle the exception appropriately
+        }
+    }
+```
 <br /><br /><br />
 
 ### 5. Создаём метод getAllData в классе DatabaseHandler, который перебирает всю БД и возвращает все данные из неё и в последствии выводим эти данные на экран пользователя в консоли.
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/4c7a5bfa-a058-47b7-a7dd-b16ef7c0eefc)
+
+```
+    /**
+     * Метод для получения всех данных из базы.
+     *
+     * @return Список строк данных.
+     * @throws SQLException Исключение, связанное с работой с базой данных.
+     */
+    public List<String> getAllData() throws SQLException {
+        List<String> allData = new ArrayList<>();
+
+        String sql = """
+                SELECT
+                	PlayerMetrics.name, PlayerMetrics.position, PlayerMetrics.height,
+                	PlayerMetrics.weight, PlayerMetrics.age, teams.name AS teamName
+                FROM `PlayerMetrics`
+                	LEFT JOIN `teams`
+                		ON teams.id = PlayerMetrics.teamId
+                """;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet data = preparedStatement.executeQuery()) {
+            while (data.next()) {
+                String dbLine = data.getString("name") + ", " +
+                        data.getString("position") + ", " +
+                        data.getInt("height") + ", " +
+                        data.getInt("weight") + ", " +
+                        data.getDouble("age") + ", " +
+                        data.getString("teamName");
+
+                allData.add(dbLine);
+            }
+        }
+
+        return allData;
+    }
+```
+
 * Вывод данных в консоль:<br />
 ![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/63503bb4-fbfe-43e7-8fcc-e61801da2dcd)
 
@@ -215,12 +311,103 @@ public class TeamCSVReader  {
 ### 6. Создаём метод который выполняет первое задание, а именно строит график среднего возраста команд.
 
 * Достаём данные из базы данных:
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/5d0d5def-7e6d-4e6a-8b27-92d970a35069)
 
+```
+    /**
+     * Метод для получения среднего возраста команды.
+     *
+     * @param teamName Имя команды.
+     * @return Средний возраст команды.
+     * @throws SQLException Исключение, связанное с работой с базой данных.
+     */
+    public double getAverageAge(String teamName) throws SQLException {
+        int teamId = getTeamNumber(teamName).getInt(1);
+        String sql = "SELECT AVG(age) FROM `PlayerMetrics` WHERE `teamId` = '" + teamId + "'";
+        try (ResultSet averageHeight = connection.createStatement().executeQuery(sql)) {
+            return averageHeight.getDouble(1);
+        }
+    }
+```
 
 * Создаём график: <br />
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/92cf2f1d-5640-45f9-9be3-7cc883ddabd4)
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/c23ac017-cc9b-452e-9658-f92e5ab079b6)
+
+```
+    /**
+     * Создание и сохранение графика среднего возраста команд.
+     *
+     * @throws SQLException Если возникает ошибка SQL.
+     * @throws IOException  Если возникает ошибка ввода/вывода.
+     */
+    private static void createChart() throws SQLException, IOException {
+        // Отключение логирования SLF4J
+        System.setProperty("org.jfree.chart.util.LogTarget", "org.jfree.chart.util.NullLogTarget");
+
+        // Задание данных для графика
+        var dataset = new DefaultCategoryDataset();
+
+        // Перехватываем SQLException из метода getAverageAge
+        try {
+            dataBase.getTeamsNames().forEach(name -> {
+                try {
+                    dataset.addValue(dataBase.getAverageAge(name), "Возраст", name);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Создание графика
+        var chart = ChartFactory.createLineChart(
+                "Задание 1 - Средний возраст всех команд",
+                "Команды",
+                "Возраст",
+
+                dataset
+        );
+
+        // Настройка внешнего вида графика
+        var plot = (CategoryPlot) chart.getPlot();
+        var renderer = new LineAndShapeRenderer();
+
+        renderer.setSeriesPaint(0, Color.BLUE);
+        renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+
+        plot.setRenderer(renderer);
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setRangeGridlinesVisible(true);
+        plot.setRangeGridlinePaint(Color.BLACK);
+
+        var yAxis = (NumberAxis) plot.getRangeAxis();
+        yAxis.setTickLabelPaint(Color.BLACK);
+
+        var xAxis = (CategoryAxis) plot.getDomainAxis();
+        xAxis.setTickLabelPaint(Color.BLACK);
+
+        // Настройка заголовка
+        var title = chart.getTitle();
+        title.setPaint(Color.DARK_GRAY);
+        title.setFont(new Font("Arial", Font.BOLD, 18));
+
+        // Настройка легенды
+        var legend = chart.getLegend();
+        legend.setItemPaint(Color.BLACK);
+
+        // Сохранение графика
+        try {
+            ChartUtils.saveChartAsPNG(
+                    new File("D:\\JDK projects\\MyJavaProject-Sport\\chart.png"),
+                    chart,
+                    1920,
+                    1080
+            );
+            System.out.println("График сохранен в файл chart.png");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+```
 <br /><br /><br />
 
 
@@ -233,20 +420,157 @@ public class TeamCSVReader  {
 ### 8. Создаём метод для второго задания, а именно: "Найдите команду с самым высоким средним ростом. Выведите в консоль 5 самых высоких игроков команды."
 
 * Делаем нужные запросы из БД:
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/90e1e0e6-83eb-4b29-8538-6913a470f752)
+
+```
+    /**
+     * Метод для получения имен самых высоких игроков команды.
+     *
+     * @param teamName Имя команды.
+     * @return Массив имен самых высоких игроков.
+     * @throws SQLException Исключение, связанное с работой с базой данных.
+     */
+    public String[] getMaxHeightPlayers(String teamName) throws SQLException {
+        int teamId = getTeamNumber(teamName).getInt(1);
+        String sql = "SELECT DISTINCT `name` FROM `PlayerMetrics` WHERE `teamId` = " + teamId + " ORDER BY `height` DESC LIMIT 5";
+        ResultSet data = connection.createStatement().executeQuery(sql);
+
+        List<String> playerNames = new ArrayList<>();
+        while (data.next()) {
+            playerNames.add(data.getString(1));
+        }
+
+        return playerNames.toArray(new String[0]);
+    }
+
+    /**
+     * Метод для получения среднего роста команды.
+     *
+     * @param teamName Имя команды.
+     * @return Средний рост команды.
+     * @throws SQLException Исключение, связанное с работой с базой данных.
+     */
+    public double getAverageHeight(String teamName) throws SQLException {
+        int teamId = getTeamNumber(teamName).getInt(1);
+        String sql = "SELECT AVG(height) FROM PlayerMetrics WHERE `teamId` = '" + teamId + "'";
+        try (ResultSet averageHeight = connection.createStatement().executeQuery(sql)) {
+            return averageHeight.getDouble(1);
+        }
+    }
+```
 
 * Создаём методы для обработки и вывода в консоль:
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/00d4dcc3-c568-4f8c-be91-84013c3db8fa)
 
+```
+    /**
+     * Расчет и отображение информации о команде с самыми высокими игроками.
+     *
+     * @throws SQLException Если возникает ошибка SQL.
+     */
+    private static void calculateAndDisplayTallestTeamInfo() throws SQLException {
+        var teamsList = dataBase.getTeamsNames();
+        var maxHeightTeam = findTeamWithMaxHeight(teamsList);
+
+        // Отображение команды с самыми высокими игроками
+        System.out.println("Команда с самым большим средним ростом - " + maxHeightTeam);
+        System.out.println("Самые высокие игроки: " +
+                String.join(", ", dataBase.getMaxHeightPlayers(maxHeightTeam)));
+    }
+
+    /**
+     * Поиск команды с самыми высокими игроками.
+     *
+     * @param teams Список команд.
+     * @return Имя команды с самыми высокими игроками.
+     * @throws SQLException Если возникает ошибка SQL.
+     */
+    private static String findTeamWithMaxHeight(List<String> teams) throws SQLException {
+        String maxHeightTeam = "";
+        double maxHeight = -1;
+
+        // Поиск команды с самыми высокими игроками
+        for (String name : teams) {
+            double height = dataBase.getAverageHeight(name);
+            if (height > maxHeight) {
+                maxHeight = height;
+                maxHeightTeam = name;
+            }
+        }
+
+        return maxHeightTeam;
+    }
+```
 <br /><br /><br />
 
 ### 9. Создаём метод для третьего задания, а именно "Найдите команду, с средним ростом равным от 74 до 78 inches и средним весом от 190 до 210 lbs, с самым высоким средним возрастом."
 * Делаем нужные запросы из БД:
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/a04cc553-e721-46a7-be76-893d905aedf5)
+  
+```
+    /**
+     * Метод для получения среднего роста команды.
+     *
+     * @param teamName Имя команды.
+     * @return Средний рост команды.
+     * @throws SQLException Исключение, связанное с работой с базой данных.
+     */
+    public double getAverageHeight(String teamName) throws SQLException {
+        int teamId = getTeamNumber(teamName).getInt(1);
+        String sql = "SELECT AVG(height) FROM PlayerMetrics WHERE `teamId` = '" + teamId + "'";
+        try (ResultSet averageHeight = connection.createStatement().executeQuery(sql)) {
+            return averageHeight.getDouble(1);
+        }
+    }
+
+    /**
+     * Метод для получения среднего веса команды.
+     *
+     * @param teamName Имя команды.
+     * @return Средний вес команды.
+     * @throws SQLException Исключение, связанное с работой с базой данных.
+     */
+    public double getAverageWeight(String teamName) throws SQLException {
+        int teamId = getTeamNumber(teamName).getInt(1);
+        String sql = "SELECT AVG(weight) FROM PlayerMetrics WHERE `teamId` = '" + teamId + "'";
+        try (ResultSet averageHeight = connection.createStatement().executeQuery(sql)) {
+            return averageHeight.getDouble(1);
+        }
+    }
+```
 
 * Создаём методы для обработки и вывода в консоль:
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/8932fde9-f8df-41e9-9f37-6b5a4f4758b6)
 
+```
+    /**
+     * Поиск и отображение информации о команде с самыми старшими игроками и определенными характеристиками.
+     *
+     * @throws SQLException Если возникает ошибка SQL.
+     */
+    private static void findAndDisplayTeamWithOldestPlayers() throws SQLException {
+        var teamsList = dataBase.getTeamsNames();
+        var oldestPlayersTeam = findTeamWithMaxAgeAndAttributes(teamsList);
+
+        // Отображение информации о команде с самыми старшими игроками и определенными характеристиками
+        System.out.println("Команда, со средним ростом от 74 до 78 inches, средним весом от 190 до 210 lbs и с самым высоким средним возрастом - " + oldestPlayersTeam);
+    }
+
+    private static String findTeamWithMaxAgeAndAttributes(List<String> teams) throws SQLException {
+        String oldestPlayersTeam = "";
+        double maxAge = -1;
+
+        // Поиск команды с самыми старшими игроками и определенными характеристиками
+        for (String name : teams) {
+            double age = dataBase.getAverageAge(name);
+            double averageHeight = dataBase.getAverageHeight(name);
+            double averageWeight = dataBase.getAverageWeight(name);
+
+            if (age > maxAge && averageHeight >= 74 && averageHeight <= 78 && averageWeight >= 190 && averageWeight <= 210) {
+                maxAge = age;
+                oldestPlayersTeam = name;
+            }
+        }
+
+        return oldestPlayersTeam;
+    }
+```
 <br /><br /><br />
 
 ### 10. Итоговый вывод результата выполнения программой заданий:
