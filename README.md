@@ -6,6 +6,8 @@
 * SportsTeam - Представляет команду, включающую в себя список игроков и другие характеристики команды
 * PlayerMetrics - Описывает показатели игрока, такие как имя, позиция, рост, вес и возраст.
 
+##### SportsTeam
+
 ```
 import java.util.List;
 import java.util.ArrayList;
@@ -55,7 +57,83 @@ public class SportsTeam  {
         return teamName;
     }
 ```
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/659811b0-0421-42b1-80b1-232127ac337c)
+
+##### PlayerMetrics
+
+```
+/**
+ * Класс, представляющий показатели игрока.
+ */
+public class PlayerMetrics  {
+    private final String name;       // Имя игрока
+    private final String position;   // Позиция игрока
+    private final int height;        // Рост игрока в дюймах
+    private final int weight;        // Вес игрока в фунтах
+    private final double age;        // Возраст игрока
+
+    /**
+     * Конструктор класса PlayerIndicators.
+     *
+     * @param name     Имя игрока.
+     * @param position Позиция игрока.
+     * @param height   Рост игрока в дюймах.
+     * @param weight   Вес игрока в фунтах.
+     * @param age      Возраст игрока.
+     */
+    public PlayerMetrics(String name, String position, int height, int weight, double age) {
+        this.name = name;
+        this.position = position;
+        this.height = height;
+        this.weight = weight;
+        this.age = age;
+    }
+
+    /**
+     * Получение имени игрока.
+     *
+     * @return Имя игрока.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Получение позиции игрока.
+     *
+     * @return Позиция игрока.
+     */
+    public String getPosition() {
+        return position;
+    }
+
+    /**
+     * Получение роста игрока.
+     *
+     * @return Рост игрока в дюймах.
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * Получение веса игрока.
+     *
+     * @return Вес игрока в фунтах.
+     */
+    public int getWeight() {
+        return weight;
+    }
+
+    /**
+     * Получение возраста игрока.
+     *
+     * @return Возраст игрока.
+     */
+    public double getAge() {
+        return age;
+    }
+}
+```
 <br /><br /><br />
 
 ### 2. Создаём класс TeamCSVReader, который будет служить для обработки данных в формате CSV (Comma-Separated Values), который часто используется для представления табличных данных. В этом приложении, класс TeamCSVReader выполняет роль чтения данных из CSV файла и преобразования их в формат, который можно использовать в приложении для дальнейшей обработки.
