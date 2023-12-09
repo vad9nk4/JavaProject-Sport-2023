@@ -5,7 +5,56 @@
 Файлы PlayerMetrics и SportsTeam представляют собой классы, используемые в приложении для представления структуры данных. Они служат для моделирования сущностей, с которыми приложение работает, а именно, игроков и команд.
 * SportsTeam - Представляет команду, включающую в себя список игроков и другие характеристики команды
 * PlayerMetrics - Описывает показатели игрока, такие как имя, позиция, рост, вес и возраст.
-![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/7fc88c25-fcef-4dd6-91c0-2e91f93fffdf)
+
+```
+import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * Класс, представляющий спортивную команду.
+ */
+public class SportsTeam  {
+    private final String teamName; // Название команды
+    private final List<PlayerMetrics> playersList = new ArrayList<>(); // Список игроков в команде
+
+    /**
+     * Конструктор класса Team.
+     *
+     * @param teamName Название команды.
+     */
+    public SportsTeam(String teamName) {
+        this.teamName = teamName;
+    }
+
+    /**
+     * Добавляет игрока в команду.
+     *
+     * @param player Игрок для добавления.
+     */
+    public void addPlayer(PlayerMetrics player) {
+        playersList.add(player);
+    }
+
+    /**
+     * Получает массив игроков в команде.
+     *
+     * @return Массив игроков в команде.
+     */
+    public PlayerMetrics[] getPlayers() {
+        PlayerMetrics[] playersArray = new PlayerMetrics[playersList.size()];
+        playersList.toArray(playersArray);
+        return playersArray;
+    }
+
+    /**
+     * Получает название команды.
+     *
+     * @return Название команды.
+     */
+    public String getName() {
+        return teamName;
+    }
+```
 ![image](https://github.com/vad9nk4/JavaProject-Sport-2023/assets/134198984/659811b0-0421-42b1-80b1-232127ac337c)
 <br /><br /><br />
 
